@@ -30,20 +30,12 @@ func badNameHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("500"))
 }
 
-func getDataHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Get data Handler")
-}
-
 func dataHandler(w http.ResponseWriter, r *http.Request) {
 	d, err := io.ReadAll(r.Body)
 	if err != nil {
 		panic(err)
 	}
 	fmt.Fprintf(w, "I got message:\n%s", d)
-}
-
-func headersGetHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Headers Get handler")
 }
 
 func headersPostHandler(w http.ResponseWriter, r *http.Request) {
@@ -65,9 +57,7 @@ func Start(host string, port int) {
 	router := mux.NewRouter()
 	router.HandleFunc("/name/{name:[a-z A-Z]+}", nameHandler).Methods(http.MethodGet)
 	router.HandleFunc("/bad", badNameHandler).Methods(http.MethodGet)
-	router.HandleFunc("/data", getDataHandler).Methods(http.MethodGet)
 	router.HandleFunc("/data", dataHandler).Methods(http.MethodPost)
-	router.HandleFunc("/headers", headersGetHandler).Methods(http.MethodGet)
 	router.HandleFunc("/headers", headersPostHandler).Methods(http.MethodPost)
 	http.Handle("/", router)
 
